@@ -1,0 +1,32 @@
+[
+  {
+    "Name": "Electronics",
+    "Description": "Electronic devices and accessories",
+    "CreatedAt": "2024-01-15T10:00:00",
+    "UpdatedAt": null
+  },
+  {
+    "Name": "Furniture",
+    "Description": "Office and home furniture items",
+    "CreatedAt": "2024-01-15T10:00:00",
+    "UpdatedAt": null
+  },
+  {
+    "Name": "Clothing",
+    "Description": "Apparel and fashion items",
+    "CreatedAt": "2024-01-15T10:00:00",
+    "UpdatedAt": null
+  },
+  {
+    "Name": "Books",
+    "Description": "Books and educational materials",
+    "CreatedAt": "2024-01-15T10:00:00",
+    "UpdatedAt": null
+  },
+  {
+    "Name": "Stationery",
+    "Description": "Office supplies and stationery",
+    "CreatedAt": "2024-01-15T10:00:00",
+    "UpdatedAt": null
+  }
+]

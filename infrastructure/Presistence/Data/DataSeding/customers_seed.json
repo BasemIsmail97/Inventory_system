@@ -1,0 +1,50 @@
+[
+  {
+    "Name": "Ahmed Hassan",
+    "Email": "ahmed.hassan@email.com",
+    "Phone": "+201012345678",
+    "Address": "10 Nile Street, Cairo, Egypt",
+    "CreatedAt": "2024-01-12T10:00:00",
+    "UpdatedAt": null
+  },
+  {
+    "Name": "Fatima Ali",
+    "Email": "fatima.ali@email.com",
+    "Phone": "+201012345679",
+    "Address": "25 Alexandria Road, Alexandria, Egypt",
+    "CreatedAt": "2024-01-12T10:30:00",
+    "UpdatedAt": null
+  },
+  {
+    "Name": "Mohamed Ibrahim",
+    "Email": "mohamed.ibrahim@email.com",
+    "Phone": "+201012345680",
+    "Address": "50 Pyramids Avenue, Giza, Egypt",
+    "CreatedAt": "2024-01-12T11:00:00",
+    "UpdatedAt": null
+  },
+  {
+    "Name": "Sara Mahmoud",
+    "Email": "sara.mahmoud@email.com",
+    "Phone": "+201012345681",
+    "Address": "15 Port Said Street, Port Said, Egypt",
+    "CreatedAt": "2024-01-12T11:30:00",
+    "UpdatedAt": null
+  },
+  {
+    "Name": "Khaled Mostafa",
+    "Email": "khaled.mostafa@email.com",
+    "Phone": "+201012345682",
+    "Address": "30 Canal Road, Suez, Egypt",
+    "CreatedAt": "2024-01-12T12:00:00",
+    "UpdatedAt": null
+  },
+  {
+    "Name": "Nour Elsayed",
+    "Email": "nour.elsayed@email.com",
+    "Phone": "+201012345683",
+    "Address": "88 University Street, Mansoura, Egypt",
+    "CreatedAt": "2024-01-12T12:30:00",
+    "UpdatedAt": null
+  }
+]

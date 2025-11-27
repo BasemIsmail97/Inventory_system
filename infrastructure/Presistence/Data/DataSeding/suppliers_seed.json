@@ -1,0 +1,42 @@
+[
+  {
+    "Name": "Tech Solutions Ltd",
+    "Email": "info@techsolutions.com",
+    "Phone": "+201234567890",
+    "Address": "123 Tech Street, Cairo, Egypt",
+    "CreatedAt": "2024-01-10T09:00:00",
+    "UpdatedAt": null
+  },
+  {
+    "Name": "Global Furniture Co",
+    "Email": "sales@globalfurniture.com",
+    "Phone": "+201234567891",
+    "Address": "456 Furniture Avenue, Alexandria, Egypt",
+    "CreatedAt": "2024-01-10T09:00:00",
+    "UpdatedAt": null
+  },
+  {
+    "Name": "Fashion World",
+    "Email": "contact@fashionworld.com",
+    "Phone": "+201234567892",
+    "Address": "789 Fashion Boulevard, Giza, Egypt",
+    "CreatedAt": "2024-01-10T09:00:00",
+    "UpdatedAt": null
+  },
+  {
+    "Name": "Book Haven Publishers",
+    "Email": "info@bookhaven.com",
+    "Phone": "+201234567893",
+    "Address": "321 Library Road, Mansoura, Egypt",
+    "CreatedAt": "2024-01-10T09:00:00",
+    "UpdatedAt": null
+  },
+  {
+    "Name": "Office Supplies Plus",
+    "Email": "orders@officesupplies.com",
+    "Phone": "+201234567894",
+    "Address": "654 Supply Lane, Suez, Egypt",
+    "CreatedAt": "2024-01-10T09:00:00",
+    "UpdatedAt": null
+  }
+]

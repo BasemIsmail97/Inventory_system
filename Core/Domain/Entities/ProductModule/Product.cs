@@ -20,6 +20,7 @@ namespace Domain.Entities.ProductModule
         public Collection<SalesOrderDetail> SalesOrderDetails { get; set; }
         #region Category navigational property
         public int CategoryId { get; set; }
+        
         public Category Category { get; set; }
         #endregion
         #region Supplier navigational property

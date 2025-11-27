@@ -1,0 +1,52 @@
+[
+  {
+    "InvoiceNumber": "PO-2024-001",
+    "OrderDate": "2024-02-01T09:00:00",
+    "TotalAmount": 125000.00,
+    "PaymentStatus": 1,
+    "OrderStatus": 5,
+    "RemainingAmount": 0.00,
+    "SupplierId": 1,
+    "ApplicationUserId": "aaee095a-6d78-4291-885d-0199ed309dd6"
+  },
+  {
+    "InvoiceNumber": "PO-2024-002",
+    "OrderDate": "2024-02-05T10:30:00",
+    "TotalAmount": 67500.00,
+    "PaymentStatus": 2,
+    "OrderStatus": 3,
+    "RemainingAmount": 20000.00,
+    "SupplierId": 2,
+    "ApplicationUserId": "aaee095a-6d78-4291-885d-0199ed309dd6"
+  },
+  {
+    "InvoiceNumber": "PO-2024-003",
+    "OrderDate": "2024-02-10T11:00:00",
+    "TotalAmount": 45000.00,
+    "PaymentStatus": 3,
+    "OrderStatus": 2,
+    "RemainingAmount": 45000.00,
+    "SupplierId": 3,
+    "ApplicationUserId": "df554466-7a64-4613-897b-f43e4e1c5565"
+  },
+  {
+    "InvoiceNumber": "PO-2024-004",
+    "OrderDate": "2024-02-15T14:00:00",
+    "TotalAmount": 30000.00,
+    "PaymentStatus": 1,
+    "OrderStatus": 5,
+    "RemainingAmount": 0.00,
+    "SupplierId": 4,
+    "ApplicationUserId": "df554466-7a64-4613-897b-f43e4e1c5565"
+  },
+  {
+    "InvoiceNumber": "PO-2024-005",
+    "OrderDate": "2024-02-20T09:30:00",
+    "TotalAmount": 42500.00,
+    "PaymentStatus": 2,
+    "OrderStatus": 2,
+    "RemainingAmount": 12500.00,
+    "SupplierId": 5,
+    "ApplicationUserId": "aaee095a-6d78-4291-885d-0199ed309dd6"
+  }
+]

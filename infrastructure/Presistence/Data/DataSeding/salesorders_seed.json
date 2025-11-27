@@ -1,0 +1,82 @@
+[
+  {
+    "InvoiceNumber": "SO-2024-001",
+    "OrderDate": "2024-02-25T10:00:00",
+    "TotalAmount": 25350.00,
+    "PaymentStatus": 1,
+    "OrderStatus": 5,
+    "RemainingAmount": 0.00,
+    "CustomerId": 1,
+    "ApplicationUserId": "aaee095a-6d78-4291-885d-0199ed309dd6"
+  },
+  {
+    "InvoiceNumber": "SO-2024-002",
+    "OrderDate": "2024-02-26T11:30:00",
+    "TotalAmount": 7300.00,
+    "PaymentStatus": 2,
+    "OrderStatus": 3,
+    "RemainingAmount": 2000.00,
+    "CustomerId": 2,
+    "ApplicationUserId": "df554466-7a64-4613-897b-f43e4e1c5565"
+  },
+  {
+    "InvoiceNumber": "SO-2024-003",
+    "OrderDate": "2024-02-27T14:00:00",
+    "TotalAmount": 1400.00,
+    "PaymentStatus": 1,
+    "OrderStatus": 5,
+    "RemainingAmount": 0.00,
+    "CustomerId": 3,
+    "ApplicationUserId": "aaee095a-6d78-4291-885d-0199ed309dd6"
+  },
+  {
+    "InvoiceNumber": "SO-2024-004",
+    "OrderDate": "2024-02-28T09:00:00",
+    "TotalAmount": 600.00,
+    "PaymentStatus": 3,
+    "OrderStatus": 1,
+    "RemainingAmount": 600.00,
+    "CustomerId": 4,
+    "ApplicationUserId": "df554466-7a64-4613-897b-f43e4e1c5565"
+  },
+  {
+    "InvoiceNumber": "SO-2024-005",
+    "OrderDate": "2024-03-01T10:30:00",
+    "TotalAmount": 3480.00,
+    "PaymentStatus": 2,
+    "OrderStatus": 2,
+    "RemainingAmount": 1000.00,
+    "CustomerId": 5,
+    "ApplicationUserId": "aaee095a-6d78-4291-885d-0199ed309dd6"
+  },
+  {
+    "InvoiceNumber": "SO-2024-006",
+    "OrderDate": "2024-03-02T13:00:00",
+    "TotalAmount": 6650.00,
+    "PaymentStatus": 1,
+    "OrderStatus": 5,
+    "RemainingAmount": 0.00,
+    "CustomerId": 6,
+    "ApplicationUserId": "df554466-7a64-4613-897b-f43e4e1c5565"
+  },
+  {
+    "InvoiceNumber": "SO-2024-007",
+    "OrderDate": "2024-03-05T15:30:00",
+    "TotalAmount": 9600.00,
+    "PaymentStatus": 2,
+    "OrderStatus": 3,
+    "RemainingAmount": 3000.00,
+    "CustomerId": 1,
+    "ApplicationUserId": "aaee095a-6d78-4291-885d-0199ed309dd6"
+  },
+  {
+    "InvoiceNumber": "SO-2024-008",
+    "OrderDate": "2024-03-07T11:00:00",
+    "TotalAmount": 1800.00,
+    "PaymentStatus": 1,
+    "OrderStatus": 5,
+    "RemainingAmount": 0.00,
+    "CustomerId": 3,
+    "ApplicationUserId": "df554466-7a64-4613-897b-f43e4e1c5565"
+  }
+]
