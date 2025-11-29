@@ -3,6 +3,7 @@ using Domain.Entities.IdentityModule;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Presistence.Data;
+using Presistence.Repositories;
 using System.Threading.Tasks;
 
 namespace inventory_system
@@ -33,6 +34,7 @@ namespace inventory_system
 
 
             builder. Services.AddScoped<IDataSeeding, DataSeeding>();
+            builder. Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var  app = builder.Build();
             using var scope = app.Services.CreateScope();

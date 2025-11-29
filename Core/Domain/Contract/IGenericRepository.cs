@@ -13,7 +13,12 @@ namespace Domain.Contract
         Task AddAsync(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);
-        
+        #region Specifications
+        Task<IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity> specifications);
+        Task<TEntity?> GetByIdAsync(ISpecification<TEntity> specifications);
+        Task<int> CountAsync(ISpecification<TEntity> specifications);
+        #endregion
+
 
     }
 }
