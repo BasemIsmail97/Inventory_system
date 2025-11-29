@@ -15,7 +15,7 @@ namespace Domain.Entities.ProductModule
         public string Name { get; set; } = string.Empty;
 
         public string Description { get; set; } = string.Empty;
-        public Collection<Product> Products { get; set; }
+        public Collection<Product> Products { get; set; } = new Collection<Product>();
 
     }
 }

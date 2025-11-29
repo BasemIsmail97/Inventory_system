@@ -17,8 +17,8 @@ namespace Domain.Entities.IdentityModule
         public DateTime? HireDate { get; set; }
         public DateTime? BirthDate { get; set; }
         public string? Address { get; set; }
-        public Collection<SalesOrder> SalesOrders { get; set; }
-        public Collection<PurchaseOrder> purchaseOrders { get; set; }
+        public Collection<SalesOrder> SalesOrders { get; set; } = new Collection<SalesOrder>();
+        public Collection<PurchaseOrder> purchaseOrders { get; set; } = new Collection<PurchaseOrder>();
 
     }
 }

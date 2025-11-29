@@ -19,7 +19,7 @@ namespace Domain.Entities.ProductModule
         public string Phone { get; set; } = string.Empty;
         public string? Address { get; set; } = string.Empty;
         
-        public Collection<Product> products { get; set; }
-        public Collection<PurchaseOrder> PurchaseOrders { get; set; }
+        public Collection<Product> products { get; set; } = new Collection<Product>();
+        public Collection<PurchaseOrder> PurchaseOrders { get; set; } = new Collection<PurchaseOrder>();
     }
 }

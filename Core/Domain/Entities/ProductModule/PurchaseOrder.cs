@@ -19,7 +19,7 @@ namespace Domain.Entities.ProductModule
         public PaymentStatus PaymentStatus { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public decimal RemainingAmount { get; set; }
-        public Collection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
+        public Collection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; } = new Collection<PurchaseOrderDetail>();
        
         #region Supplaier navigational property
         public int SupplierId { get; set; }

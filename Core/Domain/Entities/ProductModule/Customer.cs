@@ -18,7 +18,7 @@ namespace Domain.Entities.ProductModule
         [Phone]
         public string Phone { get; set; } = string.Empty;
         public string? Address { get; set; } = string.Empty;
-        public Collection<SalesOrder> SalesOrders { get; set; }
+        public Collection<SalesOrder> SalesOrders { get; set; } = new Collection<SalesOrder>();
 
 
     }

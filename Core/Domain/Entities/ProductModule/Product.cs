@@ -16,8 +16,8 @@ namespace Domain.Entities.ProductModule
         public int QuantityInStock { get; set; }
         public int MinimumStockLevel { get; set; }
         public string? PictureUrl { get; set; } = string.Empty;
-        public Collection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
-        public Collection<SalesOrderDetail> SalesOrderDetails { get; set; }
+        public Collection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; } = new Collection<PurchaseOrderDetail>();
+        public Collection<SalesOrderDetail> SalesOrderDetails { get; set; } = new Collection<SalesOrderDetail>();
         #region Category navigational property
         public int CategoryId { get; set; }
         

@@ -6,10 +6,39 @@ namespace Presistence.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<SalesOrder> builder)
         {
-            builder.Property(p => p.TotalAmount).HasColumnType("decimal(15,2)");
-            builder.Property(p => p.RemainingAmount).HasColumnType("decimal(15,2)");
-            builder.HasOne(p => p.Customer).WithMany(c => c.SalesOrders).HasForeignKey(p => p.CustomerId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(p => p.ApplicationUser).WithMany(a => a.SalesOrders).HasForeignKey(p => p.ApplicationUserId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasKey(so => so.Id);
+
+            builder.Property(so => so.InvoiceNumber)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            builder.Property(so => so.OrderDate)
+                .IsRequired()
+                .HasDefaultValueSql("GETDATE()");
+
+            builder.Property(so => so.TotalAmount)
+                .HasColumnType("decimal(18,2)")
+                .IsRequired();
+
+            builder.Property(so => so.RemainingAmount)
+                .HasColumnType("decimal(18,2)")
+                .IsRequired();
+
+            // Foreign Keys
+            builder.HasOne(so => so.Customer)
+                .WithMany(c => c.SalesOrders)
+                .HasForeignKey(so => so.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(so => so.ApplicationUser)
+                .WithMany(u => u.SalesOrders)
+                .HasForeignKey(so => so.ApplicationUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Indexes
+            builder.HasIndex(so => so.InvoiceNumber).IsUnique();
+            builder.HasIndex(so => so.OrderDate);
+            builder.HasIndex(so => so.CustomerId);
         }
     }
 }

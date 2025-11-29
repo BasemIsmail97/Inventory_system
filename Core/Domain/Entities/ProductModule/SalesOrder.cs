@@ -18,7 +18,7 @@ namespace Domain.Entities.ProductModule
         public PaymentStatus PaymentStatus { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public decimal RemainingAmount { get; set; }
-        public ICollection<SalesOrderDetail> SalesOrderDetails { get; set; }
+        public ICollection<SalesOrderDetail> SalesOrderDetails { get; set; }    = new List<SalesOrderDetail>();
         #region Customer navigational property
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
