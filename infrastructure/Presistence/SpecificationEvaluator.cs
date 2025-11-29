@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Presistence
 {
-    public class SpecificationEvalutor 
+    public class SpecificationEvaluator 
     {
         public static IQueryable<TEntity> CreateQuery<TEntity>(IQueryable<TEntity> inputQuery, ISpecification<TEntity> spec) where TEntity : class
         {

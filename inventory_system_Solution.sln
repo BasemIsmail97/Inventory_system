@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Abstraction", "Cor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "presentation", "infrastructure\presentation\presentation.csproj", "{81C4FA4A-77BA-C10E-81E7-C77B40368971}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presistence", "infrastructure\Presistence\Presistence.csproj", "{3BC1D350-2B20-E773-19B6-FAE4C1928410}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "infrastructure\Presistence\Persistence.csproj", "{3BC1D350-2B20-E773-19B6-FAE4C1928410}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shards", "Shards\Shards.csproj", "{1734E500-8F42-4CF0-BA18-74F8A91D5285}"
 EndProject

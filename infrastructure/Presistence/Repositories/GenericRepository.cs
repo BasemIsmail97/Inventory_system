@@ -1,10 +1,4 @@
-﻿using Presistence.Data;
-using System;
-using System.Collections.Generic;
-using System.Formats.Tar;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace Presistence.Repositories
 {
@@ -29,5 +23,16 @@ namespace Presistence.Repositories
 
         public void Update(TEntity entity)
        => _dbContext.Set<TEntity>().Update(entity);
+        #region Specifications
+        public async Task<int> CountAsync(ISpecification<TEntity> specifications)
+        => await SpecificationEvaluator.CreateQuery(_dbContext.Set<TEntity>(), specifications).CountAsync();
+
+        public async Task<IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity> specifications)
+        => await SpecificationEvaluator.CreateQuery(_dbContext.Set<TEntity>(), specifications).ToListAsync();
+
+
+        public async Task<TEntity?> GetByIdAsync(ISpecification<TEntity> specifications)
+       => await SpecificationEvaluator.CreateQuery(_dbContext.Set<TEntity>(), specifications).FirstOrDefaultAsync();
+        #endregion
     }
 }
