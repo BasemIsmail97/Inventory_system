@@ -1,6 +1,6 @@
 ﻿
 
-namespace Presistence.Repositories
+namespace Persistence.Repositories
 {
     public class GenericRepository<TEntity>(InventoryDbContext _dbContext) : IGenericRepository<TEntity> where TEntity : class
     {

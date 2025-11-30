@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Persistence.Data.Configuration
 {
-    public class CustomerConiguration : IEntityTypeConfiguration<Customer>
+    public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {
         public void Configure(EntityTypeBuilder<Customer> builder)
         {

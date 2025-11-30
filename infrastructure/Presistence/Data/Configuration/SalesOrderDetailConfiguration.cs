@@ -1,5 +1,5 @@
 ﻿
-namespace Presistence.Data.Configuration
+namespace Persistence.Data.Configuration
 {
     public class SalesOrderDetailConfiguration : IEntityTypeConfiguration<SalesOrderDetail>
     {

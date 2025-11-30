@@ -3,8 +3,8 @@ using Domain.Entities.IdentityModule;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Presistence.Data;
-using Presistence.Repositories;
+using Persistence.Data;
+using Persistence.Repositories;
 using System.Threading.Tasks;
 
 namespace inventory_system

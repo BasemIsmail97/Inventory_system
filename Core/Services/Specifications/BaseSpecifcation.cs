@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Services.Specifications
 {
-    internal class BaseSpecifcation<TEntity> : ISpecification<TEntity> where TEntity : class
+    public class BaseSpecifcation<TEntity> : ISpecification<TEntity> where TEntity : class
     {
         public Expression<Func<TEntity, bool>>? Criteria { get; private set; }
         protected  BaseSpecifcation(Expression<Func<TEntity, bool>>? criteria)

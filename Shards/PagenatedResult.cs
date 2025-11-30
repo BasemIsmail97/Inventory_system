@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Persistence
+namespace Shards
 {
-    public class AssemblyRefrence
+    public record PagenatedResult<TData>(int pageIndex, int pageSize, int TotalCount, IEnumerable<TData> Data)
     {
+
     }
 }

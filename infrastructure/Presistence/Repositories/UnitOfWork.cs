@@ -2,7 +2,7 @@
 
 
 
-namespace Presistence.Repositories
+namespace Persistence.Repositories
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {

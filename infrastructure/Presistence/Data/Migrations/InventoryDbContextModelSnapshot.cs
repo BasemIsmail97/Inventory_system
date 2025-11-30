@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Presistence.Data;
+using Persistence.Data;
 
 #nullable disable
 
-namespace Presistence.Data.Migrations
+namespace Persistence.Data.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
     partial class InventoryDbContextModelSnapshot : ModelSnapshot

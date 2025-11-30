@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace Presistence.Data
+namespace Persistence.Data
 {
     public class InventoryDbContext : IdentityDbContext
     {

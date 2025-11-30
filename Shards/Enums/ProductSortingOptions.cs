@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Persistence
+namespace Shards.Enums
 {
-    public class AssemblyRefrence
+    public enum ProductSortingOptions
     {
+        NameAsc = 1,
+        NameDesc,
+        PriceAsc,
+        PriceDesc
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Text.Json;
 
 
-namespace Presistence.Data
+namespace Persistence.Data
 {
     public class DataSeeding(InventoryDbContext _dbContext ,UserManager<ApplicationUser>  _userManager ,RoleManager<IdentityRole> _roleManager) : IDataSeeding
     {
@@ -22,7 +22,7 @@ namespace Presistence.Data
                 #region Category Seeding
                 if (!_dbContext.Categories.Any())
                 {
-                    var CatygoriesData = File.OpenRead("..\\infrastructure\\Presistence\\Data\\DataSeding\\categories_seed.json");
+                    var CatygoriesData = File.OpenRead("..\\infrastructure\\Persistence\\Data\\DataSeding\\categories_seed.json");
                     var Catygories = await JsonSerializer.DeserializeAsync<List<Category>>(CatygoriesData);
                     if (Catygories != null && Catygories.Any())
                     {
@@ -36,7 +36,7 @@ namespace Presistence.Data
                 if (!_dbContext.Suppliers.Any())
                 {
 
-                    var SuppliersData = File.OpenRead("..\\infrastructure\\Presistence\\Data\\DataSeding\\suppliers_seed.json");
+                    var SuppliersData = File.OpenRead("..\\infrastructure\\Persistence\\Data\\DataSeding\\suppliers_seed.json");
                     var Suppliers = await JsonSerializer.DeserializeAsync<List<Supplier>>(SuppliersData);
                     if (Suppliers != null && Suppliers.Any())
                     {
@@ -49,7 +49,7 @@ namespace Presistence.Data
                 #region Customer Seeding
                 if (!_dbContext.Customers.Any())
                 {
-                    var CustomersData = File.OpenRead("..\\infrastructure\\Presistence\\Data\\DataSeding\\customers_seed.json");
+                    var CustomersData = File.OpenRead("..\\infrastructure\\Persistence\\Data\\DataSeding\\customers_seed.json");
                     var Customers = await JsonSerializer.DeserializeAsync<List<Customer>>(CustomersData);
                     if (Customers != null && Customers.Any())
                     {
@@ -63,7 +63,7 @@ namespace Presistence.Data
                 if (!_dbContext.Products.Any())
                 {
 
-                    var ProductsData = File.OpenRead("..\\infrastructure\\Presistence\\Data\\DataSeding\\products_seed.json");
+                    var ProductsData = File.OpenRead("..\\infrastructure\\Persistence\\Data\\DataSeding\\products_seed.json");
                     var Products = await JsonSerializer.DeserializeAsync<List<Product>>(ProductsData);
                     if (Products != null && Products.Any())
                     {
@@ -77,7 +77,7 @@ namespace Presistence.Data
                 if (!_dbContext.PurchaseOrders.Any())
                 {
 
-                    var PurchaseOrdersData = File.OpenRead("..\\infrastructure\\Presistence\\Data\\DataSeding\\purchaseorders_seed.json");
+                    var PurchaseOrdersData = File.OpenRead("..\\infrastructure\\Persistence\\Data\\DataSeding\\purchaseorders_seed.json");
                     var PurchaseOrders = await JsonSerializer.DeserializeAsync<List<PurchaseOrder>>(PurchaseOrdersData);
                     if (PurchaseOrders != null && PurchaseOrders.Any())
                     {
@@ -91,7 +91,7 @@ namespace Presistence.Data
                 if (!_dbContext.PurchaseOrderDetails.Any())
                 {
 
-                    var PurchaseOrdersDetailData = File.OpenRead("..\\infrastructure\\Presistence\\Data\\DataSeding\\purchaseorderdetails_seed.json");
+                    var PurchaseOrdersDetailData = File.OpenRead("..\\infrastructure\\Persistence\\Data\\DataSeding\\purchaseorderdetails_seed.json");
                     var PurchaseOrdersDetail = await JsonSerializer.DeserializeAsync<List<PurchaseOrderDetail>>(PurchaseOrdersDetailData);
                     if (PurchaseOrdersDetail != null && PurchaseOrdersDetail.Any())
                     {
@@ -105,7 +105,7 @@ namespace Presistence.Data
                 if (!_dbContext.SalesOrders.Any())
                 {
 
-                    var SalesOrdersData = File.OpenRead("..\\infrastructure\\Presistence\\Data\\DataSeding\\salesorders_seed.json");
+                    var SalesOrdersData = File.OpenRead("..\\infrastructure\\Persistence\\Data\\DataSeding\\salesorders_seed.json");
                     var SalesOrders = await JsonSerializer.DeserializeAsync<List<SalesOrder>>(SalesOrdersData);
                     if (SalesOrders != null && SalesOrders.Any())
                     {
@@ -119,7 +119,7 @@ namespace Presistence.Data
                 if (!_dbContext.SalesOrderDetails.Any())
                 {
 
-                    var SalesOrdersDetailData = File.OpenRead("..\\infrastructure\\Presistence\\Data\\DataSeding\\salesorderdetails_seed.json");
+                    var SalesOrdersDetailData = File.OpenRead("..\\infrastructure\\Persistence\\Data\\DataSeding\\salesorderdetails_seed.json");
                     var SalesOrdersDetail = await JsonSerializer.DeserializeAsync<List<SalesOrderDetail>>(SalesOrdersDetailData);
                     if (SalesOrdersDetail != null && SalesOrdersDetail.Any())
                     {

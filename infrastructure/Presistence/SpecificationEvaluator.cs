@@ -1,6 +1,6 @@
 ﻿
 
-namespace Presistence
+namespace Persistence
 {
     public class SpecificationEvaluator 
     {
