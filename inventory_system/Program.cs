@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Persistence.Data;
 using Persistence.Repositories;
+using Services.Abstraction.Contract;
+using Services.Implementations;
 using System.Threading.Tasks;
 
 namespace inventory_system
@@ -103,6 +105,55 @@ namespace inventory_system
                 });
             });
 
+            #endregion
+          builder.Services.AddScoped<IServiceManger, ServiceMangerWithFactoryDelegate>();
+            #region Product Service
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<Func<IProductService>>(provider =>
+
+            () => provider.GetRequiredService<IProductService>()
+
+            );
+            #endregion
+            #region Customer Service
+            builder.Services.AddScoped<ICustomerService, CustomerService>();
+            builder.Services.AddScoped<Func<ICustomerService>>(provider =>
+
+            () => provider.GetRequiredService<ICustomerService>()
+
+            );
+            #endregion
+            #region Category service
+            builder.Services.AddScoped<ICategoryServicecs, CategoryService>();
+            builder.Services.AddScoped<Func<ICategoryServicecs>>(provider =>
+
+            () => provider.GetRequiredService<ICategoryServicecs>()
+
+            );
+            #endregion
+            #region Supplier Service
+            builder.Services.AddScoped<ISupplierServicecs, SupplierService>();
+            builder.Services.AddScoped<Func<ISupplierServicecs>>(provider =>
+
+            () => provider.GetRequiredService<ISupplierServicecs>()
+
+            );
+            #endregion
+            #region Sales Order Service
+            builder.Services.AddScoped<ISalesOrderService, SalesOrderService>();
+            builder.Services.AddScoped<Func<ISalesOrderService>>(provider =>
+
+            () => provider.GetRequiredService<ISalesOrderService>()
+
+            );
+            #endregion
+            #region Purchase Order Service
+            builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
+            builder.Services.AddScoped<Func<IPurchaseOrderService>>(provider =>
+
+            () => provider.GetRequiredService<IPurchaseOrderService>()
+
+            );
             #endregion
 
             var app = builder.Build();

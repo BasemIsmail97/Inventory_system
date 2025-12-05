@@ -10,11 +10,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.ProductModule
 {
-    public class PurchaseOrder
+    public class PurchaseOrder : BaseEntity<int>
     {
-        public int Id { get; set; }
-        public string InvoiceNumber { get; set; }
-        public DateTime OrderDate { get; set; }  = DateTime.Now;
+        
+        public string InvoiceNumber { get; set; } = string.Empty;      
         public decimal TotalAmount { get; set; }
         public PaymentStatus PaymentStatus { get; set; }
         public OrderStatus OrderStatus { get; set; }

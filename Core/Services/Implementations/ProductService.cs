@@ -1,31 +1,21 @@
-﻿using AutoMapper;
-using Domain.Contract;
-using Domain.Entities.ProductModule;
-using Services.Abstraction.Contract;
-using Services.Specifications;
-using Shards;
-using Shards.DTOS.ProductDtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace Services.Implementations
 {
     public class ProductService(IUnitOfWork _unitOfWork ,IMapper _mapper) : IProductService
     {
-        public async Task<int> CreateProductAsync(CreateOrUpdateProductDto createProductDto)
+        public async Task<int> CreateProductAsync( CreateOrUpdateProductDto createProductDto)
         {
+            createProductDto.CreatedAt = DateTime.Now;
             var product = _mapper.Map<Product>(createProductDto);
-             await _unitOfWork.GetRepository<Product>().AddAsync(product);
+            await _unitOfWork.GetRepository<Product>().AddAsync(product);
            return await _unitOfWork.SaveChangesAsync();
         }
 
         public  async Task< bool> DeleteProductAsync(int productId)
         {
-            var Repo =  _unitOfWork.GetRepository<Product>();
-            var product = Repo.GetByIdAsync(productId).Result;
+            var Repo =   _unitOfWork.GetRepository<Product>();
+            var product = await Repo.GetByIdAsync(productId);
             if(product is null)
             {
                 return false;
@@ -40,10 +30,10 @@ namespace Services.Implementations
 
         public async Task<PagenatedResult<ProductDto>> GetAllProductsAsync(ProductSpecificationParameters specificationParameters)
         {
-            var Repo =  _unitOfWork.GetRepository<Product>();
+            var Repo =   _unitOfWork.GetRepository<Product>();
             var Spec= new ProductWithCategoryAndSupplierSpecification(specificationParameters);
-            var Products= Repo.GetAllAsync(Spec);
-            var productDtos= _mapper.Map<IEnumerable<ProductDto>>(Products);
+            var Products= await Repo.GetAllAsync(Spec);
+            var productDtos=  _mapper.Map<IEnumerable<ProductDto>>(Products);
             var pageSize = productDtos.Count();
             var CountSpecification = new ProductCountSpecification(specificationParameters);
             var TotalCount = await Repo.CountAsync(CountSpecification);
@@ -65,7 +55,13 @@ namespace Services.Implementations
 
         public  async Task<int> UpdateProductAsync(CreateOrUpdateProductDto updateProductDto)
         {
-           var product = _mapper.Map<Product>(updateProductDto);
+            var existingProduct = await  _unitOfWork.GetRepository<Product>().GetByIdAsync(updateProductDto.Id);
+            if(existingProduct is null)
+            {
+                throw new KeyNotFoundException($"Product with id {updateProductDto.Id} not found.");
+            }
+            updateProductDto.UpdatedAt = DateTime.Now;
+            var product = _mapper.Map<Product>(updateProductDto);
             _unitOfWork.GetRepository<Product>().Update(product);
             return await _unitOfWork.SaveChangesAsync();
         }

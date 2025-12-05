@@ -12,10 +12,7 @@ namespace Persistence.Data.Configuration
                 .IsRequired()
                 .HasMaxLength(50);
 
-            builder.Property(so => so.OrderDate)
-                .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
-
+           
             builder.Property(so => so.TotalAmount)
                 .HasColumnType("decimal(18,2)")
                 .IsRequired();
@@ -37,7 +34,7 @@ namespace Persistence.Data.Configuration
 
             // Indexes
             builder.HasIndex(so => so.InvoiceNumber).IsUnique();
-            builder.HasIndex(so => so.OrderDate);
+           
             builder.HasIndex(so => so.CustomerId);
         }
     }

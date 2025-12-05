@@ -12,7 +12,7 @@ namespace Services.Abstraction.Contract
     {
         Task<PagenatedResult<ProductDto>> GetAllProductsAsync(ProductSpecificationParameters specificationParameters);
         Task<ProductDetailsDto> GetProductByIdAsync(int productId);
-        Task<int> CreateProductAsync(CreateOrUpdateProductDto createProductDto);
+        Task<int> CreateProductAsync( CreateOrUpdateProductDto createProductDto);
       Task<  int> UpdateProductAsync(CreateOrUpdateProductDto updateProductDto);
        Task< bool> DeleteProductAsync(int productId);
     }
