@@ -12,7 +12,7 @@ namespace Domain.Entities.ProductModule
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal Subtotal{ get; set; }
-        #region Prodcut navigational property
+        #region Prodcud navigational property
         public int ProductId { get; set; }
         public Product Product { get; set; } 
         #endregion

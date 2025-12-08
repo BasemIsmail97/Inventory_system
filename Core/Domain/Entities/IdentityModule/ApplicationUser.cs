@@ -19,6 +19,7 @@ namespace Domain.Entities.IdentityModule
         public string? Address { get; set; }
         public Collection<SalesOrder> SalesOrders { get; set; } = new Collection<SalesOrder>();
         public Collection<PurchaseOrder> purchaseOrders { get; set; } = new Collection<PurchaseOrder>();
+        public List<RefreshToken> RefreshTokens { get; set; } = new();
 
     }
 }

@@ -10,14 +10,14 @@ namespace Shards
     public class ProductSpecificationParameters
     {
         private const int maxPageSize = 10;
-        private const int _defultPageSize = 5;
+        private const int _defaultPageSize = 5;
         public string ? SearchTerm { get; set; }
         public int ? MinPrice { get; set; }
         public int ? MaxPrice { get; set; }
         public int ? CategoryId { get; set; }
         public int ? SupplierId { get; set; }
         public ProductSortingOptions sort { get; set; }
-        private int _pageSize = _defultPageSize;
+        private int _pageSize = _defaultPageSize;
         public int PageSize
         {
             get => _pageSize;

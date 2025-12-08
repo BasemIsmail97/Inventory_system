@@ -9,11 +9,11 @@ namespace Shards
     public class SalesOrderSpecificationParameters
     {
         private const int maxPageSize = 10;
-        private const int _defultPageSize = 5;
+        private const int _defaultPageSize = 5;
         public string? SearchTerm { get; set; }
         public int? CustomerId { get; set; }
         public string? ApplicationUserId { get; set; }
-        private int _pageSize = _defultPageSize;
+        private int _pageSize = _defaultPageSize;
         public int PageSize
         {
             get => _pageSize;

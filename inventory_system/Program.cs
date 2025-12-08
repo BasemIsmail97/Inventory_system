@@ -1,13 +1,18 @@
 using Domain.Contract;
 using Domain.Entities.IdentityModule;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Persistence.Data;
 using Persistence.Repositories;
+using Services;
 using Services.Abstraction.Contract;
 using Services.Implementations;
-using System.Threading.Tasks;
+using Shards.Settings;
+using System.Text;
 
 namespace inventory_system
 {
@@ -17,14 +22,16 @@ namespace inventory_system
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            #region Configure Services
+            #region Services Configuration
 
             // Add Controllers
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllers();
+
+            // Add Swagger
+            builder.Services.AddEndpointsApiExplorer();
 
             // Database Configuration
             builder.Services.AddDbContext<InventoryDbContext>(options =>
-            {
                 options.UseSqlServer(
                     builder.Configuration.GetConnectionString("DefaultConnection"),
                     sqlOptions =>
@@ -34,18 +41,17 @@ namespace inventory_system
                             maxRetryDelay: TimeSpan.FromSeconds(30),
                             errorNumbersToAdd: null
                         );
-                        sqlOptions.CommandTimeout(60);
-                    });
+                    }
+                )
+            );
 
-                // Enable sensitive data logging only in development
-                if (builder.Environment.IsDevelopment())
-                {
-                    options.EnableSensitiveDataLogging();
-                    options.EnableDetailedErrors();
-                }
-            });
+            // ? JWT Settings Configuration
+            builder.Services.Configure<JwtSettings>(
+                builder.Configuration.GetSection("JWT")
+            );
 
-            // Identity Configuration
+           
+            // ? Identity Configuration
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 // Password settings
@@ -54,7 +60,6 @@ namespace inventory_system
                 options.Password.RequireUppercase = true;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequiredLength = 6;
-                options.Password.RequiredUniqueChars = 0;
 
                 // Lockout settings
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
@@ -62,52 +67,42 @@ namespace inventory_system
                 options.Lockout.AllowedForNewUsers = true;
 
                 // User settings
-                options.User.AllowedUserNameCharacters =
-                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 options.User.RequireUniqueEmail = true;
 
                 // Sign in settings
-                options.SignIn.RequireConfirmedEmail = false;
-                options.SignIn.RequireConfirmedPhoneNumber = false;
+                options.SignIn.RequireConfirmedEmail = false; // ? Set to true if using email verification
             })
             .AddEntityFrameworkStores<InventoryDbContext>()
             .AddDefaultTokenProviders();
 
-            // Cookie Configuration
-            builder.Services.ConfigureApplicationCookie(options =>
+            // ? JWT Authentication Configuration
+            var jwtSettings = builder.Configuration.GetSection("JWT").Get<JwtSettings>();
+
+            builder.Services.AddAuthentication(options =>
             {
-                options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromHours(24);
-                options.LoginPath = "/Account/Login";
-                options.LogoutPath = "/Account/Logout";
-                options.AccessDeniedPath = "/Account/AccessDenied";
-                options.SlidingExpiration = true;
-            });
-
-            // Register Application Services
-            builder.Services.AddScoped<IDataSeeding, DataSeeding>();
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-            // Add Logging
-            builder.Logging.ClearProviders();
-            builder.Logging.AddConsole();
-            builder.Logging.AddDebug();
-
-            // Add CORS (if needed for API)
-            builder.Services.AddCors(options =>
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
             {
-                options.AddPolicy("AllowAll", policy =>
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false; // Set to true in production
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    policy.AllowAnyOrigin()
-                          .AllowAnyMethod()
-                          .AllowAnyHeader();
-                });
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidAudience = jwtSettings.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwtSettings.SecretKey)
+                    ),
+                    ClockSkew = TimeSpan.Zero // Remove delay of token expiration
+                };
             });
 
-            #endregion
-          builder.Services.AddScoped<IServiceManger, ServiceMangerWithFactoryDelegate>();
-            #region Product Service
+            #region Product Service 
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<Func<IProductService>>(provider =>
 
@@ -115,7 +110,7 @@ namespace inventory_system
 
             );
             #endregion
-            #region Customer Service
+            #region Customer Service 
             builder.Services.AddScoped<ICustomerService, CustomerService>();
             builder.Services.AddScoped<Func<ICustomerService>>(provider =>
 
@@ -123,7 +118,7 @@ namespace inventory_system
 
             );
             #endregion
-            #region Category service
+            #region Category service 
             builder.Services.AddScoped<ICategoryServicecs, CategoryService>();
             builder.Services.AddScoped<Func<ICategoryServicecs>>(provider =>
 
@@ -131,7 +126,7 @@ namespace inventory_system
 
             );
             #endregion
-            #region Supplier Service
+            #region Supplier Service 
             builder.Services.AddScoped<ISupplierServicecs, SupplierService>();
             builder.Services.AddScoped<Func<ISupplierServicecs>>(provider =>
 
@@ -139,7 +134,7 @@ namespace inventory_system
 
             );
             #endregion
-            #region Sales Order Service
+            #region Sales Order Service 
             builder.Services.AddScoped<ISalesOrderService, SalesOrderService>();
             builder.Services.AddScoped<Func<ISalesOrderService>>(provider =>
 
@@ -147,7 +142,7 @@ namespace inventory_system
 
             );
             #endregion
-            #region Purchase Order Service
+            #region Purchase Order Service 
             builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
             builder.Services.AddScoped<Func<IPurchaseOrderService>>(provider =>
 
@@ -156,11 +151,21 @@ namespace inventory_system
             );
             #endregion
 
+            // ? Register Application Services
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+            // ? AutoMapper
+            builder.Services.AddAutoMapper(cfg => { }, typeof(AssemplyReference).Assembly);
+
+            #endregion
+
             var app = builder.Build();
 
             #region Database Seeding
 
-            // Seed database in a safe scope
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -184,7 +189,6 @@ namespace inventory_system
                 {
                     logger.LogError(ex, "An error occurred while seeding the database.");
 
-                    // In development, we can see the full error
                     if (app.Environment.IsDevelopment())
                     {
                         throw;
@@ -194,10 +198,11 @@ namespace inventory_system
 
             #endregion
 
-            #region Configure Middleware Pipeline
+            #region Middleware Pipeline
 
             if (app.Environment.IsDevelopment())
             {
+               
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -210,47 +215,20 @@ namespace inventory_system
             app.UseStaticFiles();
             app.UseRouting();
 
-            // Authentication & Authorization
-            app.UseAuthentication();
+           
+
+            // ? Authentication & Authorization
+            app.UseAuthentication(); // Must be before UseAuthorization
             app.UseAuthorization();
 
-            // CORS (if configured)
-            // app.UseCors("AllowAll");
-
-            // Map routes
-            app.MapStaticAssets();
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
-                .WithStaticAssets();
+            app.MapControllers();
 
             #endregion
-
             var appLogger = app.Services.GetRequiredService<ILogger<Program>>();
             appLogger.LogInformation("Application started successfully");
 
             await app.RunAsync();
         }
-
-        // Alternative: Extension method for seeding
-        private static async Task SeedDatabaseAsync(IServiceProvider serviceProvider)
-        {
-            using var scope = serviceProvider.CreateScope();
-            var services = scope.ServiceProvider;
-
-            try
-            {
-                var dataSeeding = services.GetRequiredService<IDataSeeding>();
-                await dataSeeding.SeedIdentityDataAsync();
-                await dataSeeding.SeedDataAsync();
-            }
-            catch (Exception ex)
-            {
-                var logger = services.GetRequiredService<ILogger<Program>>();
-                logger.LogError(ex, "An error occurred while seeding the database");
-                throw;
-            }
-        }
     }
 }
-   
+
