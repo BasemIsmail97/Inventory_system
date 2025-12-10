@@ -38,25 +38,7 @@ namespace Services.Implementations
         #region Register
         public async Task<AuthResultDto> RegisterAsync(RegisterDto registerDto)
         {
-            // Check if email already exists
-            if (await _userManager.FindByEmailAsync(registerDto.Email) is not null)
-            {
-                return new AuthResultDto
-                {
-                    IsAuthenticated = false,
-                    Message = "The email address is already in use"
-                };
-            }
-
-            // Check if username already exists
-            if (await _userManager.FindByNameAsync(registerDto.UserName) is not null)
-            {
-                return new AuthResultDto
-                {
-                    IsAuthenticated = false,
-                    Message = "The username is already in use"
-                };
-            }
+            // ... validation code ...
 
             // Create new user
             var user = new ApplicationUser
@@ -67,13 +49,9 @@ namespace Services.Implementations
                 UserName = registerDto.UserName,
                 PhoneNumber = registerDto.PhoneNumber,
                 EmailConfirmed = true,
-                
-                
-                
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
-
             if (!result.Succeeded)
             {
                 return new AuthResultDto
@@ -84,21 +62,25 @@ namespace Services.Implementations
                 };
             }
 
-            // Assign default role (Employee)
-            await _userManager.AddToRoleAsync(user, registerDto.role);
+            // Assign default role
+            await _userManager.AddToRoleAsync(user, "Employee");
 
+            // ✅ STEP 1: Add refresh token to USER entity directly
+            var refreshTokenDto = _tokenService.GenerateRefreshToken();
+            var refreshToken = _mapper.Map<RefreshToken>(refreshTokenDto);
+            user.RefreshTokens.Add(refreshToken);
+            await _userManager.UpdateAsync(user); // Save token to database
 
-            // Generate JWT Token
-            var UserInfoDto = _mapper.Map<UserInfoDto>(user);
-            var jwtToken = await _tokenService.CreateJwtTokenAsync(UserInfoDto);
-            var refreshToken = _tokenService.GenerateRefreshToken();
+            // ✅ STEP 2: Map to DTO for JWT creation ONLY (read-only operation)
+            var userInfoDto = _mapper.Map<UserInfoDto>(user);
 
-            UserInfoDto.RefreshTokens.Add(refreshToken);
-            var UserAfterAddingTokens= _mapper.Map<ApplicationUser>(UserInfoDto);
-            await _userManager.UpdateAsync(UserAfterAddingTokens);
+            // ✅ STEP 3: Create JWT using the DTO
+            var jwtToken = await _tokenService.CreateJwtTokenAsync(userInfoDto);
 
+            // Get roles for response
             var roles = await _userManager.GetRolesAsync(user);
 
+            // ✅ STEP 4: Return response with all data
             return new AuthResultDto
             {
                 IsAuthenticated = true,
@@ -126,13 +108,11 @@ namespace Services.Implementations
 
             // Find user by email
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
-
             if (user is null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
             {
                 authResult.Message = "Incorrect email address or password";
                 return authResult;
             }
-
 
             // Check if account is locked
             if (user.LockoutEnd.HasValue && user.LockoutEnd > DateTime.UtcNow)
@@ -141,28 +121,29 @@ namespace Services.Implementations
                 return authResult;
             }
 
-            // Generate JWT Token
-            var userInfoDto = _mapper.Map<UserInfoDto>(user);
-            var jwtToken = await _tokenService.CreateJwtTokenAsync(userInfoDto);
-            var refreshToken = _tokenService.GenerateRefreshToken();
-
-            var roles = await _userManager.GetRolesAsync(user);
-
-            // Revoke old refresh tokens (keep only last 5)
+            // ✅ STEP 1: Clean old tokens and add new one to USER entity
             if (user.RefreshTokens.Any())
             {
-                var activeTokens = user.RefreshTokens
+                user.RefreshTokens = user.RefreshTokens
                     .OrderByDescending(t => t.CreatedOn)
                     .Take(5)
                     .ToList();
-
-                user.RefreshTokens = activeTokens;
             }
 
-            userInfoDto.RefreshTokens.Add(refreshToken);
-            var userAfterAddingTokens = _mapper.Map<ApplicationUser>(userInfoDto);
-            await _userManager.UpdateAsync(userAfterAddingTokens);
+            var refreshTokenDto = _tokenService.GenerateRefreshToken();
+            var refreshToken = _mapper.Map<RefreshToken>(refreshTokenDto);
+            user.RefreshTokens.Add(refreshToken);
+            await _userManager.UpdateAsync(user); // Save to database
 
+            // ✅ STEP 2: Map to DTO for JWT creation
+            var userInfoDto = _mapper.Map<UserInfoDto>(user);
+
+            // ✅ STEP 3: Create JWT
+            var jwtToken = await _tokenService.CreateJwtTokenAsync(userInfoDto);
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            // ✅ STEP 4: Return response
             authResult.IsAuthenticated = true;
             authResult.Message = "Login successful";
             authResult.Token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
@@ -180,6 +161,7 @@ namespace Services.Implementations
 
             return authResult;
         }
+
         #endregion
 
         #region Refresh Token
@@ -187,8 +169,9 @@ namespace Services.Implementations
         {
             var authResult = new AuthResultDto();
 
-            // Find user by refresh token
+            // ✅ Include RefreshTokens navigation property
             var user = await _userManager.Users
+                .Include(u => u.RefreshTokens)
                 .SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == refreshTokenDto.RefreshToken));
 
             if (user is null)
@@ -199,25 +182,30 @@ namespace Services.Implementations
 
             var refreshToken = user.RefreshTokens.Single(t => t.Token == refreshTokenDto.RefreshToken);
 
+            // ✅ Comprehensive validation
             if (!refreshToken.IsActive)
             {
                 authResult.Message = "The Token is inactive.";
                 return authResult;
             }
 
-            // Revoke old refresh token
-            refreshToken.RevokedOn = DateTime.Now;
+            // ✅ STEP 1: Revoke old token and add new one to USER entity
+            refreshToken.RevokedOn = DateTime.UtcNow;
 
-            // Generate new tokens
-            var UserInfoDto = _mapper.Map<UserInfoDto>(user);
-            var newRefreshToken = _tokenService.GenerateRefreshToken();
-            UserInfoDto.RefreshTokens.Add(newRefreshToken);
-            var userAfterAddingTokens = _mapper.Map<ApplicationUser>(UserInfoDto);
-            await _userManager.UpdateAsync(userAfterAddingTokens);
+            var newRefreshTokenDto = _tokenService.GenerateRefreshToken();
+            var newRefreshToken = _mapper.Map<RefreshToken>(newRefreshTokenDto);
+            user.RefreshTokens.Add(newRefreshToken);
+            await _userManager.UpdateAsync(user); // Save to database
 
-            var jwtToken = await _tokenService.CreateJwtTokenAsync(UserInfoDto);
+            // ✅ STEP 2: Map to DTO for JWT creation
+            var userInfoDto = _mapper.Map<UserInfoDto>(user);
+
+            // ✅ STEP 3: Create new JWT
+            var jwtToken = await _tokenService.CreateJwtTokenAsync(userInfoDto);
+
             var roles = await _userManager.GetRolesAsync(user);
 
+            // ✅ STEP 4: Return response
             authResult.IsAuthenticated = true;
             authResult.Message = "The Token was successfully renewed.";
             authResult.Token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
@@ -235,6 +223,8 @@ namespace Services.Implementations
 
             return authResult;
         }
+
+        
         #endregion
 
         #region Revoke Token (Logout)

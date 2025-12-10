@@ -150,9 +150,18 @@ namespace inventory_system
 
             );
             #endregion
+            #region Authentication  Service 
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<Func<IAuthService>>(provider =>
+
+            () => provider.GetRequiredService<IAuthService>()
+
+            );
+            #endregion
+
 
             // ? Register Application Services
-            builder.Services.AddScoped<IAuthService, AuthService>();
+           
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

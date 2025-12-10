@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Services.Implementations
 {
     public class ServiceMangerWithFactoryDelegate (Func<IProductService> _productFactory, Func<IPurchaseOrderService> _purchaseOrderFactory, Func<ICategoryServicecs> _categoryFactory, Func<ICustomerService> _customerFactory,
-        Func<ISupplierServicecs> _supplierFactory, Func<ISalesOrderService> _SalesOrderFactory) : IServiceManger
+        Func<ISupplierServicecs> _supplierFactory, Func<ISalesOrderService> _SalesOrderFactory, Func<IAuthService> _AuthFactory) : IServiceManger
     {
         public IPurchaseOrderService PurchaseOrderService =>_purchaseOrderFactory.Invoke();
 
@@ -20,5 +20,7 @@ namespace Services.Implementations
         public ICategoryServicecs CategoryService => _categoryFactory.Invoke();
 
         public ISupplierServicecs SupplierService =>_supplierFactory.Invoke();
+
+        public IAuthService AuthService => _AuthFactory.Invoke();
     }
 }

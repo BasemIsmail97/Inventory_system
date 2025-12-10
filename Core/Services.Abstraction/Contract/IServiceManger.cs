@@ -15,5 +15,6 @@ namespace Services.Abstraction.Contract
         ICustomerService CustomerService { get; }
         ICategoryServicecs CategoryService { get; }
         ISupplierServicecs SupplierService { get; }
+        IAuthService AuthService { get; }
     }
 }
