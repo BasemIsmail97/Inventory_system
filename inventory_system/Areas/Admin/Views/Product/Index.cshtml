@@ -1,0 +1,412 @@
+﻿@model Shards.PagenatedResult<Shards.DTOS.ProductDtos.ProductDto>
+
+@*
+    Product Index View - Display all products in a sortable, searchable table
+    Features: DataTable integration, search, filter, pagination, CRUD actions
+*@
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<!-- Page Header with Breadcrumb -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h2 mb-3">
+            <i class="fas fa-box me-2"></i>Products Management
+        </h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Admin/Dashboard">Dashboard</a></li>
+                <li class="breadcrumb-item active">Products</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- Action Buttons Row -->
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div class="mb-2 mb-md-0">
+                <a href="/Admin/Product/Create" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Add New Product
+                </a>
+                <button type="button" class="btn btn-outline-secondary" onclick="window.location.reload()">
+                    <i class="fas fa-sync-alt me-2"></i>Refresh
+                </button>
+            </div>
+            <div class="mb-2 mb-md-0">
+                <button type="button" class="btn btn-outline-success" onclick="exportToExcel()">
+                    <i class="fas fa-file-excel me-2"></i>Export to Excel
+                </button>
+                <button type="button" class="btn btn-outline-danger" onclick="exportToPDF()">
+                    <i class="fas fa-file-pdf me-2"></i>Export to PDF
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Products Table Card -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list me-2"></i>All Products
+                        <span class="badge bg-primary ms-2">@Model.TotalCount total</span>
+                    </h5>
+                </div>
+            </div>
+            <div class="card-body">
+                @if (Model?.Data != null && Model.Data.Any())
+                {
+                    <!-- Products DataTable -->
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped data-table" id="productsTable">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Supplier</th>
+                                    <th>Stock</th>
+                                    <th>Description</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var product in Model.Data)
+                                {
+                                    <tr>
+                                        <td>@product.CategoryId</td>
+                                        <td>
+                                            <strong>@product.Name</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info">@product.CategoryName</span>
+                                        </td>
+                                        <td>@product.SupplierName</td>
+                                        <td>
+                                            @if (product.QuantityInStock > 0)
+                                            {
+                                                <span class="badge bg-success">@product.QuantityInStock in stock</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">Out of stock</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(product.Description))
+                                            {
+                                                <span data-bs-toggle="tooltip" title="@product.Description">
+                                                    @(product.Description.Length > 50 ? product.Description.Substring(0, 50) + "..." : product.Description)
+                                                </span>
+                                            }
+                                        </td>
+                                        <td class="text-center actions">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <!-- View Details Button -->
+                                                <a href="/Admin/Product/Details/@product.CategoryId" 
+                                                   class="btn btn-info" 
+                                                   data-bs-toggle="tooltip" 
+                                                   title="View Details">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                
+                                                <!-- Edit Button -->
+                                                <a href="/Admin/Product/Edit/@product.CategoryId" 
+                                                   class="btn btn-warning" 
+                                                   data-bs-toggle="tooltip" 
+                                                   title="Edit Product">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                
+                                                <!-- Delete Button -->
+                                                <a href="/Admin/Product/Delete/@product.CategoryId" 
+                                                   class="btn btn-danger" 
+                                                   data-bs-toggle="tooltip" 
+                                                   title="Delete Product"
+                                                   data-delete-confirm
+                                                   data-item-name="@product.Name">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot class="table-light">
+                                <tr>
+                                    <th colspan="7" class="text-center">
+                                        Total Products: @Model.TotalCount
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <!-- Empty State -->
+                    <div class="text-center py-5">
+                        <i class="fas fa-box-open fa-5x text-muted mb-3"></i>
+                        <h4 class="text-muted">No Products Found</h4>
+                        <p class="text-muted">Start by adding your first product to the inventory.</p>
+                        <a href="/Admin/Product/Create" class="btn btn-primary mt-3">
+                            <i class="fas fa-plus me-2"></i>Add Your First Product
+                        </a>
+                    </div>
+                }
+            </div>
+            
+            @if (Model?.Data != null && Model.Data.Any())
+            {
+                <!-- Card Footer with Pagination Info -->
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="text-muted">
+                            Showing @Model.Data.Count() of @Model.TotalCount products
+                        </div>
+                        <div>
+                            <small class="text-muted">Page @Model.pageIndex</small>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        /**
+         * Products Index Page JavaScript
+         * Handles DataTable initialization, export functionality, and CRUD operations
+         */
+        
+        $(document).ready(function () {
+            // Initialize DataTable with custom options
+            initializeProductsTable();
+            
+            // Initialize tooltips for action buttons
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+
+        /**
+         * Initialize products DataTable with custom configuration
+         */
+        function initializeProductsTable() {
+            const table = $('#productsTable').DataTable({
+                responsive: true,
+                pageLength: 25,
+                lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                order: [[0, 'asc']], // Sort by ID ascending
+                columnDefs: [
+                    { 
+                        targets: 6, // Actions column
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search products...",
+                    lengthMenu: "Show _MENU_ products per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ products",
+                    infoEmpty: "No products available",
+                    infoFiltered: "(filtered from _MAX_ total products)",
+                    zeroRecords: "No matching products found",
+                    emptyTable: "No products available in the system"
+                },
+                dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                     '<"row"<"col-sm-12"tr>>' +
+                     '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+                drawCallback: function () {
+                    // Reinitialize tooltips after table redraw
+                    $('[data-bs-toggle="tooltip"]').tooltip();
+                }
+            });
+
+            // Add search highlight functionality
+            table.on('search.dt', function () {
+                highlightSearchTerm(table.search());
+            });
+        }
+
+        /**
+         * Highlight search term in table
+         * param {string} searchTerm - The term to highlight
+         */
+        function highlightSearchTerm(searchTerm) {
+            if (!searchTerm) return;
+            
+            $('#productsTable tbody td').each(function () {
+                const cellText = $(this).text();
+                if (cellText.toLowerCase().includes(searchTerm.toLowerCase())) {
+                    $(this).css('background-color', '#fff3cd');
+                } else {
+                    $(this).css('background-color', '');
+                }
+            });
+        }
+
+        /**
+         * Export table data to Excel
+         */
+        function exportToExcel() {
+            showLoading('Preparing Excel export...');
+            
+            // Get DataTable instance
+            const table = $('#productsTable').DataTable();
+            
+            // Get all data (visible and hidden by pagination)
+            const data = table.rows({ search: 'applied' }).data();
+            
+            // Prepare CSV content
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "ID,Name,Category,Supplier,Stock,Description\n";
+            
+            data.each(function (row) {
+                // Extract text content from each cell
+                const id = $(row[0]).text();
+                const name = $(row[1]).text();
+                const category = $(row[2]).text();
+                const supplier = $(row[3]).text();
+                const stock = $(row[4]).text();
+                const description = $(row[5]).text();
+                
+                csvContent += `"${id}","${name}","${category}","${supplier}","${stock}","${description}"\n`;
+            });
+            
+            // Create download link
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `products_export_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            
+            link.click();
+            document.body.removeChild(link);
+            
+            hideLoading();
+            showToast('Products exported successfully!', 'success');
+        }
+
+        /**
+         * Export table data to PDF
+         */
+        function exportToPDF() {
+            showToast('PDF export functionality will be implemented with jsPDF library', 'info');
+            
+            // Note: In production, implement using jsPDF and jsPDF-AutoTable
+            // Example implementation:
+            // const doc = new jsPDF();
+            // doc.autoTable({ html: '#productsTable' });
+            // doc.save('products.pdf');
+        }
+
+        /**
+         * Refresh products table
+         */
+        function refreshTable() {
+            showLoading('Refreshing products...');
+            
+            setTimeout(function () {
+                window.location.reload();
+            }, 500);
+        }
+
+        /**
+         * Handle successful delete operation
+         * param {string} productName - Name of deleted product
+         */
+        function handleDeleteSuccess(productName) {
+            showToast(`Product "${productName}" deleted successfully!`, 'success');
+            
+            // Refresh table after short delay
+            setTimeout(function () {
+                refreshTable();
+            }, 1500);
+        }
+    </script>
+}
+
+@section Styles {
+    <style>
+        /* Product Index specific styles */
+        
+        /* Ensure action buttons don't wrap */
+        .table td.actions {
+            white-space: nowrap;
+            min-width: 120px;
+        }
+        
+        /* Hover effect for table rows */
+        .table-hover tbody tr:hover {
+            background-color: rgba(13, 110, 253, 0.05);
+            transition: background-color 0.2s ease;
+        }
+        
+        /* Badge styling */
+        .badge {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        /* Empty state styling */
+        .fa-box-open {
+            opacity: 0.3;
+        }
+        
+         /* Responsive adjustments */
+        
+           
+        {
+            .btn-group 
+            {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .btn-group .btn {
+                margin-bottom: 0.25rem;
+                border-radius: 0.25rem !important;
+            }
+            
+            .card-header h5 {
+                font-size: 1rem;
+            }
+         }
+        
+        /* DataTable custom styling */
+        .dataTables_wrapper .dataTables_length select {
+            padding: 0.375rem 2rem 0.375rem 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+        }
+        
+        .dataTables_wrapper .dataTables_filter input {
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+            padding: 0.375rem 0.75rem;
+        }
+        
+        /* Loading overlay for export operations */
+        .export-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+    </style>
+}

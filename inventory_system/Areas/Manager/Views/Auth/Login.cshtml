@@ -1,0 +1,85 @@
+﻿@model Shards.DTOS.AuthDtos.LoginDto
+@{
+    ViewData["Title"] = "Manager Login";
+    Layout = "~/Views/Shared/_LayoutAuth.cshtml";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div data-success-message="@TempData["SuccessMessage"]"></div>
+}
+
+<div class="auth-content">
+    <!-- Page Title -->
+    <h2>Manager Login</h2>
+    <p>Welcome! Please login to your manager account</p>
+
+    <!-- Login Form -->
+    <form asp-area="Manager" asp-controller="Auth" asp-action="Login" method="post">
+        <!-- Validation Summary -->
+        <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+        <!-- Email Input -->
+        <div class="form-group">
+            <label asp-for="Email" class="form-label">Email Address</label>
+            <div class="input-group">
+                <input asp-for="Email" 
+                       class="form-control" 
+                       placeholder="manager@example.com" 
+                       autocomplete="email"
+                       type="email"
+                       required />
+                <i class="fas fa-envelope"></i>
+            </div>
+            <span asp-validation-for="Email" class="field-validation-error"></span>
+        </div>
+
+        <!-- Password Input -->
+        <div class="form-group">
+            <label asp-for="Password" class="form-label">Password</label>
+            <div class="input-group">
+                <input asp-for="Password" 
+                       class="form-control" 
+                       placeholder="••••••••" 
+                       autocomplete="current-password"
+                       type="password"
+                       required />
+                <i class="fas fa-lock"></i>
+            </div>
+            <span asp-validation-for="Password" class="field-validation-error"></span>
+        </div>
+
+        <!-- Remember Me Checkbox -->
+        <div class="form-check">
+            <input type="checkbox" id="rememberMe" name="RememberMe" />
+            <label for="rememberMe">Remember Me</label>
+        </div>
+
+        <!-- Forgot Password Link -->
+        <div class="forgot-password">
+            <a href="#" class="auth-link">Forgot Password?</a>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt"></i> Sign In
+        </button>
+
+        <!-- Register Employee Link -->
+        <a asp-area="Manager" asp-controller="Auth" asp-action="Register" class="auth-link">
+            Register new employee? <strong>Register Here</strong>
+        </a>
+
+        <!-- Information Box - Manager can only register employees -->
+        <div class="info-box">
+            <p>
+                <i class="fas fa-info-circle"></i>
+                As a manager, you can register employee accounts only
+            </p>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

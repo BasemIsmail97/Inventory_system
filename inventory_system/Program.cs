@@ -22,20 +22,22 @@ namespace inventory_system
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            #region Services Configuration
-
-            // Add Controllers
+            #region MVC & Controllers Configuration
+            // Register MVC controllers for API endpoints
             builder.Services.AddControllers();
 
-            // Add Swagger
-            builder.Services.AddEndpointsApiExplorer();
+            // Register MVC controllers with views for web pages
+            builder.Services.AddControllersWithViews();
+            #endregion
 
-            // Database Configuration
+            #region Database Configuration
+            // Configure Entity Framework Core with SQL Server
             builder.Services.AddDbContext<InventoryDbContext>(options =>
                 options.UseSqlServer(
                     builder.Configuration.GetConnectionString("DefaultConnection"),
                     sqlOptions =>
                     {
+                        // Enable automatic retry on transient failures
                         sqlOptions.EnableRetryOnFailure(
                             maxRetryCount: 5,
                             maxRetryDelay: TimeSpan.FromSeconds(30),
@@ -44,24 +46,27 @@ namespace inventory_system
                     }
                 )
             );
+            #endregion
 
-            // ? JWT Settings Configuration
+            #region JWT Settings Configuration
+            // Bind JWT settings from appsettings.json
             builder.Services.Configure<JwtSettings>(
                 builder.Configuration.GetSection("JWT")
             );
+            #endregion
 
-           
-            // ? Identity Configuration
+            #region Identity Configuration
+            // Configure ASP.NET Core Identity for user management
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
-                // Password settings
+                // Password requirements
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequiredLength = 6;
 
-                // Lockout settings
+                // Account lockout settings
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.AllowedForNewUsers = true;
@@ -70,14 +75,35 @@ namespace inventory_system
                 options.User.RequireUniqueEmail = true;
 
                 // Sign in settings
-                options.SignIn.RequireConfirmedEmail = false; // ? Set to true if using email verification
+                options.SignIn.RequireConfirmedEmail = false; // Set to true for email verification
             })
             .AddEntityFrameworkStores<InventoryDbContext>()
             .AddDefaultTokenProviders();
+            #endregion
+            // 1. Add Session & Cookie Configuration (BEFORE Build)
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                // ??? ???? ??? Localhost
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Lax;
+            });
 
-            // ? JWT Authentication Configuration
+            // 2. Configure Antiforgery (BEFORE Build)
+            builder.Services.AddAntiforgery(options =>
+            {
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Lax;
+            });
+
+
+            #region JWT Authentication Configuration
+            // Get JWT settings from configuration
             var jwtSettings = builder.Configuration.GetSection("JWT").Get<JwtSettings>();
 
+            // Configure JWT Bearer authentication
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -101,80 +127,96 @@ namespace inventory_system
                     ClockSkew = TimeSpan.Zero // Remove delay of token expiration
                 };
             });
+            #endregion
 
-            #region Product Service 
+            #region Authorization Policies
+            // Define role-based authorization policies
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("ManagerOnly", policy => policy.RequireRole("Manager"));
+                options.AddPolicy("EmployeeOnly", policy => policy.RequireRole("Employee"));
+                options.AddPolicy("AdminOrManager", policy => policy.RequireRole("Admin", "Manager"));
+                options.AddPolicy("AllRoles", policy => policy.RequireRole("Admin", "Manager", "Employee"));
+            });
+            #endregion
+
+            #region Service Manager Registration
+            // Register Service Manager - manages all business services
+            builder.Services.AddScoped<IServiceManger, ServiceMangerWithFactoryDelegate>();
+            
+            #endregion
+
+            #region Business Services Registration
+            // Register Product Service
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<Func<IProductService>>(provider =>
-
-            () => provider.GetRequiredService<IProductService>()
-
+                () => provider.GetRequiredService<IProductService>()
             );
-            #endregion
-            #region Customer Service 
+
+            // Register Customer Service
             builder.Services.AddScoped<ICustomerService, CustomerService>();
             builder.Services.AddScoped<Func<ICustomerService>>(provider =>
-
-            () => provider.GetRequiredService<ICustomerService>()
-
+                () => provider.GetRequiredService<ICustomerService>()
             );
-            #endregion
-            #region Category service 
+
+            // Register Category Service
             builder.Services.AddScoped<ICategoryServicecs, CategoryService>();
             builder.Services.AddScoped<Func<ICategoryServicecs>>(provider =>
-
-            () => provider.GetRequiredService<ICategoryServicecs>()
-
+                () => provider.GetRequiredService<ICategoryServicecs>()
             );
-            #endregion
-            #region Supplier Service 
+
+            // Register Supplier Service
             builder.Services.AddScoped<ISupplierServicecs, SupplierService>();
             builder.Services.AddScoped<Func<ISupplierServicecs>>(provider =>
-
-            () => provider.GetRequiredService<ISupplierServicecs>()
-
+                () => provider.GetRequiredService<ISupplierServicecs>()
             );
-            #endregion
-            #region Sales Order Service 
+
+            // Register Sales Order Service
             builder.Services.AddScoped<ISalesOrderService, SalesOrderService>();
             builder.Services.AddScoped<Func<ISalesOrderService>>(provider =>
-
-            () => provider.GetRequiredService<ISalesOrderService>()
-
+                () => provider.GetRequiredService<ISalesOrderService>()
             );
-            #endregion
-            #region Purchase Order Service 
+
+            // Register Purchase Order Service
             builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
             builder.Services.AddScoped<Func<IPurchaseOrderService>>(provider =>
-
-            () => provider.GetRequiredService<IPurchaseOrderService>()
-
+                () => provider.GetRequiredService<IPurchaseOrderService>()
             );
-            #endregion
-            #region Authentication  Service 
+
+            // Register Authentication Service
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<Func<IAuthService>>(provider =>
-
-            () => provider.GetRequiredService<IAuthService>()
-
+                () => provider.GetRequiredService<IAuthService>()
+            );
+            // Register Authentication Token Service
+            builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddScoped<Func<ITokenService>>(provider =>
+                () => provider.GetRequiredService<ITokenService>()
             );
             #endregion
 
-
-            // ? Register Application Services
-           
-            builder.Services.AddScoped<ITokenService, TokenService>();
+            #region Infrastructure Services Registration
+            // Register Unit of Work pattern
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // Register Data Seeding service
+            builder.Services.AddScoped<IDataSeeding, DataSeeding>();
+
+            // Register Generic Repository pattern
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-            // ? AutoMapper
-            builder.Services.AddAutoMapper(cfg => { }, typeof(AssemplyReference).Assembly);
-
             #endregion
 
+            #region AutoMapper Configuration
+            // Register AutoMapper for object-to-object mapping
+            builder.Services.AddAutoMapper(cfg => { }, typeof(AssemplyReference).Assembly);
+            #endregion
+
+            // Build the application
             var app = builder.Build();
 
             #region Database Seeding
-
+            // Seed initial data into database
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -183,61 +225,86 @@ namespace inventory_system
                 try
                 {
                     logger.LogInformation("Starting database seeding...");
-
                     var dataSeeding = services.GetRequiredService<IDataSeeding>();
 
-                    // Seed Identity data first
+                    // Seed Identity data first (users and roles)
                     await dataSeeding.SeedIdentityDataAsync();
                     logger.LogInformation("Identity data seeded successfully");
 
-                    // Then seed business data
+                    // Then seed business data (products, categories, etc.)
                     await dataSeeding.SeedDataAsync();
                     logger.LogInformation("Business data seeded successfully");
                 }
                 catch (Exception ex)
                 {
                     logger.LogError(ex, "An error occurred while seeding the database.");
-
                     if (app.Environment.IsDevelopment())
                     {
-                        throw;
+                        throw; // Re-throw in development for debugging
                     }
                 }
             }
-
             #endregion
 
-            #region Middleware Pipeline
-
+            #region Middleware Pipeline Configuration
+            // Configure error handling based on environment
             if (app.Environment.IsDevelopment())
             {
-               
+                // Show detailed error page in development
                 app.UseDeveloperExceptionPage();
             }
             else
             {
+                // Use custom error page in production
                 app.UseExceptionHandler("/Home/Error");
+                // Enable HTTP Strict Transport Security
                 app.UseHsts();
             }
 
+            // Redirect HTTP to HTTPS
             app.UseHttpsRedirection();
+
+            // Enable static file serving (CSS, JS, images)
             app.UseStaticFiles();
+
+            // Enable routing
             app.UseRouting();
+            #endregion
 
-           
+            #region Routing Configuration
+            // Configure Area routing for Admin, Manager, Employee
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+            );
+            app.UseSession();
 
-            // ? Authentication & Authorization
-            app.UseAuthentication(); // Must be before UseAuthorization
+            // Enable authentication middleware - must come before authorization
+            app.UseAuthentication();
+
+            // Enable authorization middleware
             app.UseAuthorization();
 
-            app.MapControllers();
+            app.UseAntiforgery();
+            // Map API controllers
+            // Redirect root URL to Admin Login page
+            app.MapGet("/", context =>
+            {
+                context.Response.Redirect("/Admin/Auth/Login");
+                return Task.CompletedTask;
+            });
 
+            app.MapControllers();
             #endregion
+
+            #region Application Startup
+            // Log successful application start
             var appLogger = app.Services.GetRequiredService<ILogger<Program>>();
             appLogger.LogInformation("Application started successfully");
 
+            // Run the application
             await app.RunAsync();
+            #endregion
         }
     }
 }
-

@@ -1,0 +1,104 @@
+﻿/* ========================================
+   RESPONSIVE DESIGN - TABLET
+   Screen width: 768px and below
+   ======================================== */
+@media (max-width: 768px) {
+    /* Reduce card padding on tablets */
+    .auth-card {
+        padding: 2.5rem 2rem;
+        max-width: 90%;
+    }
+
+    /* Smaller logo title */
+    .auth-logo h1 {
+        font-size: 1.5rem;
+    }
+
+    /* Smaller page title */
+    .auth-content h2 {
+        font-size: 1.3rem;
+    }
+
+    /* Hide floating shapes on smaller screens for performance */
+    .shape-1, .shape-2, .shape-3 {
+        display: none;
+    }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN - MOBILE
+   Screen width: 480px and below
+   ======================================== */
+@media (max-width: 480px) {
+    /* Reduce container padding */
+    .auth-container {
+        padding: 1rem;
+    }
+
+    /* Smaller card with less padding */
+    .auth-card {
+        padding: 2rem 1.5rem;
+        border-radius: 16px;
+    }
+
+    /* Smaller logo */
+    .auth-logo img {
+        width: 60px;
+        height: 60px;
+    }
+
+    /* Smaller logo title */
+    .auth-logo h1 {
+        font-size: 1.3rem;
+    }
+
+    /* Adjust input padding for mobile */
+    .form-control {
+        padding: 0.8rem 2.5rem 0.8rem 0.8rem;
+        font-size: 0.95rem;
+    }
+
+    /* Smaller buttons */
+    .btn {
+        padding: 0.9rem;
+        font-size: 0.95rem;
+    }
+
+    /* Stack social buttons vertically on mobile */
+    .social-buttons {
+        flex-direction: column;
+    }
+
+    /* Wider toast on mobile */
+    .toast-container {
+        width: 95%;
+    }
+}
+
+/* ========================================
+   LANDSCAPE MOBILE ORIENTATION
+   Adjust for landscape mode on mobile devices
+   ======================================== */
+@media (max-width: 768px) and (orientation: landscape) {
+    /* Reduce container padding */
+    .auth-container {
+        padding: 1rem;
+    }
+
+    /* Make card scrollable if content overflows */
+    .auth-card {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+}
+
+/* ========================================
+   LARGE SCREENS
+   Screen width: 1200px and above
+   ======================================== */
+@media (min-width: 1200px) {
+    /* Slightly larger card on large screens */
+    .auth-card {
+        max-width: 520px;
+    }
+}

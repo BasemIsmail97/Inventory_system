@@ -1,0 +1,54 @@
+﻿@model Shards.DTOS.AuthDtos.LoginDto
+@{
+    ViewData["Title"] = "Admin Login";
+    Layout = "~/Views/Shared/_LayoutAuth.cshtml";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div data-success-message="@TempData["SuccessMessage"]"></div>
+}
+
+<div class="auth-content">
+    <h2>Admin Login</h2>
+    <p>Welcome back! Please login to your account</p>
+
+    <form asp-area="Admin" asp-controller="Auth" asp-action="Login" method="post">
+        <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+        <div class="form-group">
+            <label asp-for="Email" class="form-label">Email Address</label>
+            <div class="input-group">
+                <input asp-for="Email" class="form-control" placeholder="admin@example.com" autocomplete="email" type="email" required />
+                <i class="fas fa-envelope"></i>
+            </div>
+            <span asp-validation-for="Email" class="field-validation-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password" class="form-label">Password</label>
+            <div class="input-group">
+                <input asp-for="Password" class="form-control" placeholder="••••••••" autocomplete="current-password" type="password" required />
+                <i class="fas fa-lock"></i>
+            </div>
+            <span asp-validation-for="Password" class="field-validation-error"></span>
+        </div>
+
+        <div class="form-check">
+            <input type="checkbox" id="rememberMe" name="RememberMe" />
+            <label for="rememberMe">Remember Me</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt"></i> Sign In
+        </button>
+
+        <a asp-area="Admin" asp-controller="Auth" asp-action="Register" class="auth-link">
+            Don't have an account? <strong>Register Now</strong>
+        </a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

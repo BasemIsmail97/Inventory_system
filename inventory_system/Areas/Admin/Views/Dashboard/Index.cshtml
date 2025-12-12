@@ -1,0 +1,349 @@
+﻿@*
+    Admin Dashboard - Main Statistics and Overview
+    Displays key metrics and statistics for the inventory system
+*@
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h2 mb-3">
+            <i class="fas fa-chart-line me-2"></i>Dashboard
+        </h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- Statistics Cards Row -->
+<div class="row mb-4">
+    <!-- Total Products Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="stat-label">Total Products</div>
+                    <div class="stat-value">@ViewBag.TotalProducts</div>
+                    <a href="/Admin/Product" class="text-white small">
+                        View all <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Categories Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="stat-card stat-card-success">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="stat-label">Categories</div>
+                    <div class="stat-value">@ViewBag.TotalCategories</div>
+                    <a href="/Admin/Category" class="text-white small">
+                        View all <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-tags"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Suppliers Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="stat-card stat-card-warning">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="stat-label">Suppliers</div>
+                    <div class="stat-value">@ViewBag.TotalSuppliers</div>
+                    <a href="/Admin/Supplier" class="text-white small">
+                        View all <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Customers Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="stat-card stat-card-info">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="stat-label">Customers</div>
+                    <div class="stat-value">@ViewBag.TotalCustomers</div>
+                    <a href="/Admin/Customer" class="text-white small">
+                        View all <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Orders Statistics Row -->
+<div class="row mb-4">
+    <!-- Purchase Orders Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-2">Purchase Orders</h6>
+                        <h3 class="mb-0">@ViewBag.TotalPurchaseOrders</h3>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up me-1"></i>Active Orders
+                        </small>
+                    </div>
+                    <div class="text-primary">
+                        <i class="fas fa-shopping-cart fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent">
+                <a href="/Admin/PurchaseOrder" class="text-primary small">
+                    View all <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sales Orders Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-2">Sales Orders</h6>
+                        <h3 class="mb-0">@ViewBag.TotalSalesOrders</h3>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up me-1"></i>Active Orders
+                        </small>
+                    </div>
+                    <div class="text-success">
+                        <i class="fas fa-chart-line fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent">
+                <a href="/Admin/SalesOrder" class="text-success small">
+                    View all <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Purchase Amount Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-2">Total Purchases</h6>
+                        <h3 class="mb-0">$@ViewBag.TotalPurchaseAmount.ToString("N2")</h3>
+                        <small class="text-info">
+                            <i class="fas fa-info-circle me-1"></i>Total Amount
+                        </small>
+                    </div>
+                    <div class="text-danger">
+                        <i class="fas fa-dollar-sign fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent">
+                <span class="text-muted small">Year to date</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Sales Amount Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-2">Total Sales</h6>
+                        <h3 class="mb-0">$@ViewBag.TotalSalesAmount.ToString("N2")</h3>
+                        <small class="text-success">
+                            <i class="fas fa-check-circle me-1"></i>Revenue
+                        </small>
+                    </div>
+                    <div class="text-success">
+                        <i class="fas fa-hand-holding-usd fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent">
+                <span class="text-muted small">Year to date</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions Row -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <a href="/Admin/Product/Create" class="btn btn-primary w-100">
+                            <i class="fas fa-plus me-2"></i>Add Product
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <a href="/Admin/PurchaseOrder/Create" class="btn btn-info w-100">
+                            <i class="fas fa-shopping-cart me-2"></i>New Purchase
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <a href="/Admin/SalesOrder/Create" class="btn btn-success w-100">
+                            <i class="fas fa-receipt me-2"></i>New Sale
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="/Admin/Auth/Register" class="btn btn-warning w-100">
+                            <i class="fas fa-user-plus me-2"></i>Add User
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity Row (Optional - can be expanded) -->
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-clock me-2"></i>System Overview
+                </h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Products in Stock
+                        <span class="badge bg-primary rounded-pill">@ViewBag.TotalProducts</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Active Suppliers
+                        <span class="badge bg-success rounded-pill">@ViewBag.TotalSuppliers</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Registered Customers
+                        <span class="badge bg-info rounded-pill">@ViewBag.TotalCustomers</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Product Categories
+                        <span class="badge bg-warning rounded-pill">@ViewBag.TotalCategories</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>System Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-6 detail-label">Last Login:</div>
+                        <div class="col-6 text-end detail-value">@DateTime.Now.ToString("MMM dd, yyyy HH:mm")</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-6 detail-label">User Role:</div>
+                        <div class="col-6 text-end detail-value">
+                            <span class="badge bg-success">Administrator</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-6 detail-label">System Status:</div>
+                        <div class="col-6 text-end detail-value">
+                            <span class="badge bg-success">
+                                <i class="fas fa-check-circle me-1"></i>Online
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-6 detail-label">Version:</div>
+                        <div class="col-6 text-end detail-value">1.0.0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Dashboard-specific JavaScript
+        $(document).ready(function () {
+            // Add any dashboard-specific initialization here
+            console.log('Dashboard loaded successfully');
+            
+            // Example: Refresh statistics every 5 minutes
+            // setInterval(refreshStatistics, 300000);
+        });
+
+        /**
+         * Refresh dashboard statistics (optional implementation)
+         */
+        function refreshStatistics() {
+            // AJAX call to refresh statistics
+            // $.ajax({ ... });
+        }
+    </script>
+}
+
+@section Styles {
+    <style>
+        /* Dashboard-specific styles */
+        .stat-icon i {
+            font-size: 3rem;
+            opacity: 0.8;
+        }
+        
+        .card-footer a {
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .card-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+}

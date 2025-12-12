@@ -20,12 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Area\Admin\Models\" />
-    <Folder Include="Area\Admin\Views\" />
-    <Folder Include="Area\Employee\Models\" />
-    <Folder Include="Area\Employee\Views\" />
-    <Folder Include="Area\Manager\Models\" />
-    <Folder Include="Area\Manager\Views\" />
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Employee\Models\" />
+    <Folder Include="Areas\Manager\Models\" />
   </ItemGroup>
 
 </Project>

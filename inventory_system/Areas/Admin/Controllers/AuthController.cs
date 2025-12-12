@@ -100,7 +100,7 @@ namespace YourProject.Areas.Admin.Controllers
 
         // POST: Admin/Auth/Logout
         [HttpPost("Logout")]
-        [ValidateAntiForgeryToken]
+       // [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             var refreshToken = HttpContext.Session.GetString("RefreshToken");
